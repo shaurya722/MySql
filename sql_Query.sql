@@ -61,6 +61,150 @@ call get_student_info(31);
 
 
 
+use practice;
+
+show tables in student;
+
+show triggers in student;
+
+
+-- Create the customer2 table
+CREATE TABLE customer2 (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    email VARCHAR(20),
+    birthdate DATE
+);
+
+-- -- Create the message2 table
+CREATE TABLE message2 (
+    id INT AUTO_INCREMENT,
+    messageId INT,
+    message VARCHAR(300) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+
+-- -- Create the trigger
+DELIMITER //
+
+CREATE TRIGGER check_null_dob
+AFTER INSERT ON customer2
+FOR EACH ROW
+BEGIN
+    IF NEW.birthdate IS NULL THEN
+        INSERT INTO message2 (messageId, message)
+        VALUES (NEW.id, CONCAT('Hi ', NEW.name, ', please enter your birthdate.'));
+    END IF;
+END //
+
+DELIMITER ;
+
+-- -- Insert records into customer2
+INSERT INTO customer2 (name, email, birthdate) 
+VALUES 
+    ('abc', 'abc@gmail.com', '1998-11-16'),
+    ('zxc', 'zxc@gmail.com', NULL),
+    ('asd', 'asd@gmail.com', '2000-07-12'),
+    ('qwe', 'qwe@gmail.com', NULL);
+
+-- -- Check messages in message2
+SELECT * FROM message2;
+
+SELECT * FROM customer2;
+
+
+
+
+
+-- after insert
+
+create table stdent_info(
+id int primary key,
+name varchar(23),
+marks int default null); 
+
+insert into stdent_info values(1,'alice',23),(2,'carry',54),(3,'mit',76);
+
+select * from stdent_info;
+
+create table stdent_info_time(
+id int primary key,
+name varchar(23),
+marks int default null,
+LastInserted time); 
+
+select * from stdent_info_time;
+
+-- delimiter //
+-- create trigger after_insert_details
+-- after insert in stdent_info
+-- for each row
+-- begin
+-- insert into student_detail_time values(new.id,new.name,new.marks,CURTIME());
+-- end;
+
+-- delimiter ;
+
+show triggers;
+
+insert into stdent_info values(4,'john',45);
+
+-- before  update
+
+create table sale_info(
+id int primary key,
+product varchar(100),
+quantity int
+);
+
+
+insert into sale_info 
+values
+(1,'maruti',110),
+(2,'honda',203),
+(3,'tata',150);
+
+
+-- DELIMITER $$  
+--   
+-- CREATE TRIGGER before_update_salesInfo  
+-- BEFORE UPDATE  
+-- ON sales_info FOR EACH ROW  
+-- BEGIN  
+--     DECLARE error_msg VARCHAR(255);  
+--     SET error_msg = ('The new quantity cannot be greater than 2 times the current quantity');  
+--     IF new.quantity > old.quantity * 2 THEN  
+--     SIGNAL SQLSTATE '45000'   
+--     SET MESSAGE_TEXT = error_msg;  
+--     END IF;  
+-- END $$  
+
+-- DELIMITER ;
+
+select * from sale_info;
+update sale_info set quantity = 600 where id = 2;
+update sale_info set quantity = 123 where id = 2;
+
+
+-- after update
+
+select * from student;
+
+create table student_log(
+user varchar(23),
+descreption varchar(255) NOT NULL);
+
+update student set city = 'pune' where roll_no = 102;
+
+select * from student_log;
+
+select * from student;
+
+create view view1 AS
+select roll_no,Name,city,marks from student;
+
+select * from view1;
 
 
 
